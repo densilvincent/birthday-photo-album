@@ -73,7 +73,6 @@
             transform: scale(1.05);
         }
         
-        /* Lightbox */
         .lightbox {
             display: none;
             position: fixed;
@@ -189,7 +188,6 @@
         </div>
     </div>
     
-    <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
         <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
         <div class="lightbox-content">
@@ -203,15 +201,13 @@
         let photos = [];
         let currentPhotoIndex = 0;
         
-        // Load photos from root folder
         async function loadPhotos() {
             const gallery = document.getElementById('gallery');
             photos = [];
             
-            // Try loading photos 0001.JPG through 0500.JPG
             for (let i = 1; i <= 500; i++) {
                 const photoNum = String(i).padStart(4, '0');
-                const photoPath = `./${photoNum}.JPG`;
+                const photoPath = `./public/photos/${photoNum}.JPG`;
                 
                 const img = new Image();
                 img.src = photoPath;
@@ -222,17 +218,9 @@
                 };
             }
             
-            // After 2 seconds, if no photos loaded, show message
             setTimeout(() => {
                 if (photos.length === 0) {
                     gallery.innerHTML = '<div class="loading">Loading photos...</div>';
-                } else {
-                    if (gallery.querySelector('.loading')) {
-                        gallery.innerHTML = '';
-                        photos.forEach((photo, index) => {
-                            createGalleryItem(photo, index);
-                        });
-                    }
                 }
             }, 2000);
         }
@@ -278,7 +266,6 @@
             document.getElementById('lightbox-img').src = photos[currentPhotoIndex];
         }
         
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             const lightbox = document.getElementById('lightbox');
             if (lightbox.classList.contains('active')) {
@@ -288,10 +275,7 @@
             }
         });
         
-        // Load photos on page load
         window.addEventListener('load', loadPhotos);
-        
-        // Reload photos every 3 seconds (for when you're uploading via GitHub web)
         setInterval(loadPhotos, 3000);
     </script>
 </body>
