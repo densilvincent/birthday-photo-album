@@ -203,20 +203,16 @@
         let photos = [];
         let currentPhotoIndex = 0;
         
-        // Load photos from /public/photos folder
+        // Load photos from root folder
         async function loadPhotos() {
             const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
+            photos = [];
             
-            // This checks if photos exist by trying to load them sequentially
-            let photoCount = 0;
-            
-            // Try loading up to 500 photos (adjust if you have more)
+            // Try loading photos 0001.JPG through 0500.JPG
             for (let i = 1; i <= 500; i++) {
                 const photoNum = String(i).padStart(4, '0');
-                const photoPath = `./public/photos/${photoNum}.JPG`;
+                const photoPath = `./${photoNum}.JPG`;
                 
-                // Try to load the image
                 const img = new Image();
                 img.src = photoPath;
                 
@@ -224,21 +220,19 @@
                     photos.push(photoPath);
                     createGalleryItem(photoPath, photos.length - 1);
                 };
-                
-                img.onerror = function() {
-                    // Stop searching when we hit a gap
-                    if (photoCount === 0 && i > 50) {
-                        showLoadingMessage();
-                    }
-                };
-                
-                photoCount++;
             }
             
-            // If no photos found after 2 seconds, show message
+            // After 2 seconds, if no photos loaded, show message
             setTimeout(() => {
                 if (photos.length === 0) {
-                    gallery.innerHTML = '<div class="loading">No photos found. Upload images to /public/photos folder.</div>';
+                    gallery.innerHTML = '<div class="loading">Loading photos...</div>';
+                } else {
+                    if (gallery.querySelector('.loading')) {
+                        gallery.innerHTML = '';
+                        photos.forEach((photo, index) => {
+                            createGalleryItem(photo, index);
+                        });
+                    }
                 }
             }, 2000);
         }
@@ -294,16 +288,11 @@
             }
         });
         
-        function showLoadingMessage() {
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '<div class="loading">Upload photos to see them here!</div>';
-        }
-        
         // Load photos on page load
         window.addEventListener('load', loadPhotos);
         
-        // Reload photos every 5 seconds (for when you're uploading via GitHub web)
-        setInterval(loadPhotos, 5000);
+        // Reload photos every 3 seconds (for when you're uploading via GitHub web)
+        setInterval(loadPhotos, 3000);
     </script>
 </body>
 </html>
